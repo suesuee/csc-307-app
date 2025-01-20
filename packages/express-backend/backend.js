@@ -44,6 +44,11 @@ const findUserById = (id) => {
   return users["users_list"].find((user) => user["id"] === id);
 };
 
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
+
 /* findUserByName(name) returns an array of user objects matching the name.
 You wrap that array in an object with a key users_list because the API response 
 format consistently uses users_list as the key for arrays of users. */
@@ -70,6 +75,21 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+// tested with curl
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.status(200).send();
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+/*
+GET all users: curl http://localhost:8000/users
+
+curl -X POST http://localhost:8000/users \
+-H "Content-Type: application/json" \
+-d '{"id":"qwe123","name":"Cindy","job":"Zookeeper"}'
+*/
