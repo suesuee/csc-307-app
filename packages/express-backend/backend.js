@@ -36,8 +36,23 @@ const port = 8000;
 
 app.use(express.json());
 
+const findUserByName = (name) => {
+  return users["users_list"].filter((user) => user["name"] === name);
+};
+
+/* findUserByName(name) returns an array of user objects matching the name.
+You wrap that array in an object with a key users_list because the API response 
+format consistently uses users_list as the key for arrays of users. */
 app.get("/users", (req, res) => {
-  res.send(users);
+  //   res.send(users);
+  const name = req.query.name;
+  if (name != undefined) {
+    let result = findUserByName(name);
+    result = { users_list: result };
+    res.send(result);
+  } else {
+    res.send(users);
+  }
 });
 
 app.listen(port, () => {
