@@ -77,7 +77,7 @@ app.get("/users", (req, res) => {
     result = { users_list: result };
     res.send(result);
   } else {
-    res.send(users);
+    res.send(users); // when no query params, return all users
   }
 });
 
@@ -120,7 +120,7 @@ app.get("/users", (req, res) => {
     const result = findUserByName(name);
     res.send({ users_list: result });
   } else {
-    res.send(users);
+    res.send(users); // when no query params, return all users
   }
 });
 
