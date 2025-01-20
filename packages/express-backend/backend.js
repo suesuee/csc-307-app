@@ -59,9 +59,16 @@ const removeUserById = (id) => {
   return null;
 };
 
+const findUserbyNameAndJob = (name, job) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
+};
+
 /* findUserByName(name) returns an array of user objects matching the name.
 You wrap that array in an object with a key users_list because the API response 
-format consistently uses users_list as the key for arrays of users. */
+format consistently uses users_list as the key for arrays of users.
+http://localhost:8000/users?name=Mac */
 app.get("/users", (req, res) => {
   //   res.send(users);
   const name = req.query.name;
@@ -99,6 +106,21 @@ app.delete("/users/:id", (req, res) => {
     res.status(404).send(`Resource not found to delete the user id: ${id}.`);
   } else {
     res.status(200).send(`User with id: ${id} is removed`);
+  }
+});
+
+/* http://localhost:8000/users?name=Mac&job=Bouncer */
+app.get("/users", (req, res) => {
+  const { name, job } = req.query;
+
+  if (name && job) {
+    const result = findUserbyNameAndJob(name, job);
+    res.send({ users_list: result });
+  } else if (name) {
+    const result = findUserByName(name);
+    res.send({ users_list: result });
+  } else {
+    res.send(users);
   }
 });
 
