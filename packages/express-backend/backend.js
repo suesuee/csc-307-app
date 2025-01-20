@@ -49,6 +49,16 @@ const addUser = (user) => {
   return user;
 };
 
+const removeUserById = (id) => {
+  const index = users["users_list"].findIndex((user) => user["id"] === id);
+  if (index !== -1) {
+    const removed = users["users_list"].splice(index, 1);
+    console.log("Updated users_list:", users["users_list"]);
+    return removed[0];
+  }
+  return null;
+};
+
 /* findUserByName(name) returns an array of user objects matching the name.
 You wrap that array in an object with a key users_list because the API response 
 format consistently uses users_list as the key for arrays of users. */
@@ -82,12 +92,24 @@ app.post("/users", (req, res) => {
   res.status(200).send();
 });
 
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const result = removeUserById(id);
+  if (result === null) {
+    res.status(404).send(`Resource not found to delete the user id: ${id}.`);
+  } else {
+    res.status(200).send(`User with id: ${id} is removed`);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
 /*
 GET all users: curl http://localhost:8000/users
+
+DELETE a user by id: curl -X DELETE http://localhost:8000/users/abc123
 
 curl -X POST http://localhost:8000/users \
 -H "Content-Type: application/json" \
