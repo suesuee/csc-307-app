@@ -68,7 +68,7 @@ const findUserbyNameAndJob = (name, job) => {
 };
 
 function generateRandomId() {
-  return Math.random().toString(36).slice(2, 11);
+  return Math.random().toString(36).slice(2, 8);
   // skip the first two characters (0.)
   // because they are not useful for the ID.
   // Math.random() - Generates a random number between 0 (inclusive) and 1 (exclusive).
@@ -112,11 +112,11 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
-  const result = removeUserById(id);
-  if (result === null) {
+  const removedUser = removeUserById(id);
+  if (removedUser === null) {
     res.status(404).send(`Resource not found to delete the user id: ${id}.`);
   } else {
-    res.status(200).send(`User with id: ${id} is removed`);
+    res.status(204).send();
   }
 });
 
