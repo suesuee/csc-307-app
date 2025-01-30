@@ -67,6 +67,14 @@ const findUserbyNameAndJob = (name, job) => {
   );
 };
 
+function generateRandomId() {
+  return Math.random().toString(36).slice(2, 11);
+  // skip the first two characters (0.)
+  // because they are not useful for the ID.
+  // Math.random() - Generates a random number between 0 (inclusive) and 1 (exclusive).
+  // Eg. a3v8k9jqe
+}
+
 /* findUserByName(name) returns an array of user objects matching the name.
 You wrap that array in an object with a key users_list because the API response 
 format consistently uses users_list as the key for arrays of users.
@@ -97,8 +105,9 @@ app.get("/users/:id", (req, res) => {
 // tested with curl
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+  userToAdd.id = generateRandomId();
   addUser(userToAdd);
-  res.status(200).send();
+  res.status(201).send(userToAdd);
 });
 
 app.delete("/users/:id", (req, res) => {
