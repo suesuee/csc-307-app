@@ -22,10 +22,11 @@ function MyApp() {
     })
       .then((res) => {
         if (res.status === 204) {
-          const updated = characters.filter(
-            (character) => character.id !== userId
-          );
-          setCharacters(updated);
+          // const updated = characters.filter(
+          //   (character) => character.id !== userId
+          // );
+          characters.splice(index, 1);
+          setCharacters([...characters]);
         } else if (res.status === 404) {
           console.log("User not found in the list!");
         } else {
@@ -59,7 +60,11 @@ function MyApp() {
         if (res.status === 201) return res.json();
         throw new Error("Failed to add user.");
       })
-      .then((newUser) => setCharacters([...characters, newUser]))
+      .then((newUser) => {
+        if (!characters.some((char) => char.id === newUser.id)) {
+          setCharacters([...characters, newUser]);
+        }
+      })
       .catch((error) => {
         console.log(error);
       });
