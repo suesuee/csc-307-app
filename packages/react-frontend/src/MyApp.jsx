@@ -16,7 +16,7 @@ function MyApp() {
   }, []);
 
   function removeOneCharacter(index) {
-    const userId = characters[index].id;
+    const userId = characters[index]._id;
     fetch(`http://localhost:8000/users/${userId}`, {
       method: "DELETE",
     })
@@ -61,7 +61,7 @@ function MyApp() {
         throw new Error("Failed to add user.");
       })
       .then((newUser) => {
-        if (!characters.some((char) => char.id === newUser.id)) {
+        if (!characters.some((char) => char._id === newUser._id)) {
           setCharacters([...characters, newUser]);
         }
       })

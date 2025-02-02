@@ -1,7 +1,24 @@
 //backend.js
 import express from "express";
 import cors from "cors";
-import userService from "./services/user-service";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import userService from "./services/user-service.js";
+
+// Load env vars from .env file
+dotenv.config();
+
+const { MONGO_CONNECTION_STRING } = process.env; // Read connection string from .env
+console.log("Connecting to MongoDB with:", MONGO_CONNECTION_STRING); // Debugging step
+// Set up mongoose connection
+mongoose.set("debug", true);
+mongoose
+  .connect(MONGO_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB successfully"))
+  .catch((error) => console.log("MongoDB connection error:", error));
 
 const app = express();
 const port = 8000;
@@ -54,15 +71,13 @@ app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
 
   userService
-    .findUserById(id)
+    .deleteUserById(id)
     .then((user) => {
       if (!user) {
-        return res
-          .status(404)
-          .send(`Resource not found to delete user id: ${id}`);
+        res.status(404).send(`Resource not found to delete user id: ${id}`);
+      } else {
+        res.status(204).send();
       }
-      //Delete the user from database
-      return user.remove().then(() => res.status(204).send());
     })
     .catch((error) => res.status(500).send("Error deleting user: " + error));
 });

@@ -9,10 +9,16 @@ function Form(props) {
   function handleChange(event) {
     const { name, value } = event.target; // Get the name and value of the input
     if (name === "job") setPerson({ name: person["name"], job: value });
-    else setPerson({ name: value, job: person["job"] });
+    else {
+      setPerson({ name: value, job: person["job"] });
+    }
   }
 
   function submitForm() {
+    if (!person.name || !person.job) {
+      alert("Both name and job fields are required!");
+      return;
+    }
     props.handleSubmit(person);
     setPerson({ name: "", job: "" });
   }
